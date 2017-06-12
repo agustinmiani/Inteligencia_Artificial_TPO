@@ -51,10 +51,10 @@
      	(assert (Inversion (inversionSugerida Cauciones_En_Pesos)))
      	(assert (Inversion (inversionSugerida Commodities)))
      	(assert (Inversion (inversionSugerida Indices)))
-     	(printout t "La Inversion sugerida es Fondos de inversión tasa fija" crlf)
+     	(printout t "La Inversion sugerida es Fondos de inversion tasa fija" crlf)
      	(printout t "La Inversion sugerida es Lettes" crlf)
-     	(printout t "La Inversion sugerida es Fondos de inversión tasa variable" crlf)
-     	(printout t "La Inversion sugerida es Cauciones en dólares o pesos" crlf)
+     	(printout t "La Inversion sugerida es Fondos de inversion tasa variable" crlf)
+     	(printout t "La Inversion sugerida es Cauciones en dolares o pesos" crlf)
      	(printout t "La Inversion sugerida es Commodities" crlf)
      	(printout t "La Inversion sugerida es Indices" crlf))
 
@@ -167,8 +167,8 @@
   		(assert (Inversion (inversionSugerida Commodities)))
      	(printout t "La Inversion Sugerida es Fondos de Inversion Tasa Fija" crlf)
      	(printout t "La Inversion Sugerida es Fondos de Inversion Tasa Variable" crlf)
-     	(printout t "La Inversion Sugerida es Cauciones en Dolares" crlf)
-     	(printout t "La Inversion Sugerida es Cauciones en Pesos" crlf)
+     	(printout t "La Inversion Sugerida es Cauciones en dolares" crlf)
+     	(printout t "La Inversion Sugerida es Cauciones en pesos" crlf)
      	(printout t "La Inversion Sugerida es Commodities" crlf)
      	)
 
@@ -222,12 +222,8 @@
             	 (Requisitos (ganancia ?a)
               	(duracion ?b)
               	(riesgo Medio))
-                (test (and
-                        	(or(eq ?b Dia) (eq ?b Semana))
-                        	(and
-                             	(> ?a 0)
-                             	(< ?a 5)
-                        	)
+                (test (and (or(eq ?b Dia) (eq ?b Semana))
+                        (and (> ?a 0) (< ?a 5))
                        	))
     	=>
     	(assert (Inversion (inversionSugerida Indices)))
@@ -239,13 +235,9 @@
             	(Requisitos (ganancia ?a)
           	 (duracion ?b)
      	       (riesgo Alto))
-            	(test (and
-                        	(or(eq ?b Dia) (eq ?b Semana))
-                        	(and
-                             	(> ?a 0)
-                             	(< ?a 5)
-       	                 )
-                       	))
+            	(test (and (or(eq ?b Dia) (eq ?b Semana))
+                        (and (> ?a 0) (< ?a 5))
+                        ))
              	(riesgo Alto)
     	=>
 

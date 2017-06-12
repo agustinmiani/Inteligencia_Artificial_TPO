@@ -34,11 +34,11 @@ public class Environment
                    NativeUtils.loadLibraryFromJar("/CLIPSJNI/libCLIPSJNI.jnilib");
                }
                else{
-                   JOptionPane.showMessageDialog(null, "El Sistema no es Compatible con su Sistema Operativo", "Trabajo Practico 6", JOptionPane.WARNING_MESSAGE);
+                   JOptionPane.showMessageDialog(null, "El sistema no es compatible con su Sistema Operativo", "TPO", JOptionPane.ERROR_MESSAGE);
                }
            }
        } catch (IOException e) {
-           JOptionPane.showMessageDialog(null, "Error al Intentar Levantar la Library", "Trabajo Practico 6", JOptionPane.WARNING_MESSAGE);
+           JOptionPane.showMessageDialog(null, "Error al cargar la libreria", "TPO", JOptionPane.ERROR_MESSAGE);
        }
    }
 
