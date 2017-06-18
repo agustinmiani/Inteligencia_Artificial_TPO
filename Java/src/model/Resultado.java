@@ -5,6 +5,7 @@ package model;
  */
 public class Resultado {
 
+	private Integer idRegla;
 	private String nombre;
 	private Float monto;
 
@@ -18,6 +19,15 @@ public class Resultado {
 
 	public Resultado setNombre(String nombre) {
 		this.nombre = nombre;
+		return this;
+	}
+
+	public Integer getIdRegla() {
+		return idRegla;
+	}
+
+	public Resultado setIdRegla(Integer idRegla) {
+		this.idRegla = idRegla;
 		return this;
 	}
 

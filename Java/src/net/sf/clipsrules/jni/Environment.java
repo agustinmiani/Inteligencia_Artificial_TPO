@@ -27,7 +27,14 @@ public class Environment
    static {
        try {
            if (NativeUtils.isWindows()) {
-               NativeUtils.loadLibraryFromJar("/CLIPSJNI/CLIPSJNI.dll");
+               try {
+                   if(System.getProperty("sun.arch.data.model").equalsIgnoreCase("32"))
+                       NativeUtils.loadLibraryFromJar("/CLIPSJNI/CLIPSJNI32.dll");
+                   else
+                       NativeUtils.loadLibraryFromJar("/CLIPSJNI/CLIPSJNI64.dll");
+               }catch (Exception e){
+                       JOptionPane.showMessageDialog(null, "El sistema no es compatible con su Sistema Operativo Windows", "TPO", JOptionPane.ERROR_MESSAGE);
+               }
            }
            else{
                if(NativeUtils.isMacOS()){

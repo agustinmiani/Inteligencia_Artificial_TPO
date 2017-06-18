@@ -125,11 +125,13 @@ public class Controller {
 
 	private void ubicarMontos(List<Resultado> resultados, Float montoIngresado) {
 		Float montoInvertir = montoIngresado / resultados.size();
+		montoInvertir = redondearResultado(montoInvertir);
 
 		for (Resultado aux : resultados) {
 			aux.setMonto(montoInvertir);
 		}
 	}
+
 
 	private Boolean esRepetida(List<Resultado> resultados, String nombreInversion) {
 		if (resultados != null && resultados.size() > 0) {
@@ -139,6 +141,13 @@ public class Controller {
 			}
 		}
 		return false;
+	}
+
+	private Float redondearResultado(Float montoAInvertir){
+
+		double redondeo = Math.round(montoAInvertir * 100.0) / 100.0;
+
+		return new Float(((float) redondeo));
 	}
 
 }
