@@ -5,9 +5,10 @@ package model;
  */
 public class Resultado {
 
-	private Integer idRegla;
+	private String idRegla;
 	private String nombre;
 	private Float monto;
+    private Float porcentaje;
 
 	public Resultado() {
 
@@ -22,11 +23,11 @@ public class Resultado {
 		return this;
 	}
 
-	public Integer getIdRegla() {
+	public String getIdRegla() {
 		return idRegla;
 	}
 
-	public Resultado setIdRegla(Integer idRegla) {
+	public Resultado setIdRegla(String idRegla) {
 		this.idRegla = idRegla;
 		return this;
 	}
@@ -40,7 +41,16 @@ public class Resultado {
 		return this;
 	}
 
-	@Override
+    public Float getPorcentaje() {
+        return porcentaje;
+    }
+
+    public Resultado setPorcentaje(Float porcentaje) {
+        this.porcentaje = porcentaje;
+        return this;
+    }
+
+    @Override
 	public String toString() {
 		return "Resultado{" + "nombre='" + nombre + '\'' + ", monto=" + monto + '}';
 	}

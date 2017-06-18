@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import model.Duracion;
+import model.GrupoResultados;
 import model.Resultado;
 import model.Riesgo;
 import net.sf.clipsrules.jni.Environment;
@@ -37,8 +38,8 @@ public class Controller {
 		return instance;
 	}
 
-	public List<Resultado> ejecutarClips(Riesgo riesgo, Duracion duracion,
-			Integer tasaRetorno, Float montoIngresado) {
+	public List<GrupoResultados> ejecutarClips(Riesgo riesgo, Duracion duracion,
+                                               Integer tasaRetorno, Float montoIngresado) {
 
 		try {
 			evalString = new StringBuilder();
@@ -72,7 +73,11 @@ public class Controller {
 //			FactAddressValue fv = null;
 
 			if (pv != null) {
-				return procesarResultados(pv, montoIngresado);
+				List<Resultado> resultadosInversiones = procesarResultadosInversiones(pv, montoIngresado);
+
+				return obtenerGruposPorReglas(resultadosInversiones);
+
+
 			} else {
 				JOptionPane.showMessageDialog(null, "Error al conectar con Clips.\n" +
 					"Verifique si dispone de la configuracion correspondiente.", "TPO", JOptionPane.ERROR_MESSAGE);
@@ -85,12 +90,14 @@ public class Controller {
 		return null;
 	}
 
-	private List<Resultado> procesarResultados(MultifieldValue pv, Float montoIngresado) {
+	private List<Resultado> procesarResultadosInversiones(MultifieldValue pv, Float montoIngresado) {
 
 		FactAddressValue fv = null;
 		Resultado resultado;
 		List<Resultado> resultados = new ArrayList<>();
 		String nombreInversion;
+		String idRegla;
+		Float porcentaje;
 
 		if (pv.size() > 0) {
 			for (int i = 0; i < pv.size(); i++) {
@@ -100,12 +107,21 @@ public class Controller {
 					// ResultadoFinal era el hecho, aca obtengo el slot "resultado"
 					// u otro slot que quiera
 					if (fv.getFactSlot("inversionSugerida") != null) {
-						nombreInversion = fv.getFactSlot("inversionSugerida").toString();
-						if (!esRepetida(resultados, nombreInversion)) {
-							resultado = new Resultado().setNombre(nombreInversion);
-							resultados.add(resultado);
-						}
-					}
+                        nombreInversion = fv.getFactSlot("inversionSugerida").toString();
+                        if (fv.getFactSlot("identificacion") != null) {
+                            idRegla = fv.getFactSlot("identificacion").toString();
+                            if (fv.getFactSlot("porcentaje") != null) {
+                                porcentaje = new Float(fv.getFactSlot("porcentaje").toString());
+
+                                resultado = new Resultado()
+                                        .setNombre(nombreInversion)
+                                        .setIdRegla(idRegla)
+                                        .setPorcentaje(porcentaje);
+
+                                resultados.add(resultado);
+                            }
+                        }
+                    }
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -123,14 +139,79 @@ public class Controller {
 		return null;
 	}
 
+	private List<GrupoResultados> obtenerGruposPorReglas(List<Resultado> resultadosInversiones){
+
+        String evalStr = "(find-all-facts((?J Regla_Ejecutada)) TRUE)";
+        // Aca nos devuelve un campo que esta definido en el paquete de clips.
+        // Si yo que tengo un solo hecho de resultado como esto lo que devuelve es como un array en
+        // este caso me quedo con el primero, es decir con el unico
+
+        MultifieldValue pv = (MultifieldValue) clips.eval(evalStr);
+
+//			FactAddressValue fv = null;
+
+        if (pv != null) {
+            FactAddressValue fv = null;
+            GrupoResultados grupo;
+            List<GrupoResultados> grupoResultados = new ArrayList<>();
+            String descripcionRegla;
+            String idRegla;
+
+            if (pv.size() > 0) {
+                for (int i = 0; i < pv.size(); i++) {
+                    fv = (FactAddressValue) pv.get(i);
+
+                    try {
+                        if (fv.getFactSlot("id_regla") != null) {
+                            idRegla = fv.getFactSlot("id_regla").toString();
+                            if (fv.getFactSlot("descripcion") != null) {
+                                descripcionRegla = fv.getFactSlot("descripcion").toString();
+                                grupo = new GrupoResultados()
+                                        .setIdRegla(idRegla)
+                                        .setDescripcionRegla(descripcionRegla)
+                                        .setResultados(obtenerResultadosRegla(idRegla, resultadosInversiones));
+
+                                grupoResultados.add(grupo);
+                            }
+                        }
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                return grupoResultados;
+
+            } else
+                JOptionPane.showMessageDialog(null, "No se han obtenido resultados con dicha combinacion.\n" +
+                        "Por favor, intente con otra...", "TPO", JOptionPane.WARNING_MESSAGE);
+
+            return null;
+        }
+        return null;
+    }
+
+    //TODO Cambiar esto a %
 	private void ubicarMontos(List<Resultado> resultados, Float montoIngresado) {
-		Float montoInvertir = montoIngresado / resultados.size();
-		montoInvertir = redondearResultado(montoInvertir);
+		Float montoInvertir;
 
 		for (Resultado aux : resultados) {
-			aux.setMonto(montoInvertir);
+            montoInvertir = montoIngresado * aux.getPorcentaje();
+            montoInvertir = redondearResultado(montoInvertir);
+            aux.setMonto(montoInvertir);
 		}
 	}
+
+	private List<Resultado> obtenerResultadosRegla(String idRegla, List<Resultado> resultadosTotales){
+
+            List<Resultado> resultadosGrupo = new ArrayList<>();
+
+            for(Resultado resultado: resultadosTotales){
+                if(resultado.getIdRegla().equalsIgnoreCase(idRegla))
+                    resultadosGrupo.add(resultado);
+            }
+
+            return resultadosGrupo;
+    }
+
 
 
 	private Boolean esRepetida(List<Resultado> resultados, String nombreInversion) {

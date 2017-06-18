@@ -28,6 +28,7 @@ import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
 
 import model.Duracion;
+import model.GrupoResultados;
 import model.Resultado;
 import model.Riesgo;
 
@@ -100,7 +101,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 		jMenu6.addMouseListener(new MouseListener() {
 			public void mousePressed(MouseEvent arg0) {
 				// Cierra el Sistema
-				int seguro = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea salir?", "Atención!", JOptionPane.YES_NO_OPTION);
+				int seguro = JOptionPane.showConfirmDialog(null, "ï¿½Estï¿½ seguro que desea salir?", "Atenciï¿½n!", JOptionPane.YES_NO_OPTION);
 
 				if (seguro == JOptionPane.YES_OPTION)
 					System.exit(0);				
@@ -214,7 +215,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
 	private void EjecutarSistemaExperto() {
 		Integer tasaRetorno = Integer.valueOf(-1);
-		List<Resultado> resultados;
+		List<GrupoResultados> grupoResultados;
 
 		jta_Resultados.setText("");
 
@@ -234,18 +235,25 @@ public class MenuPrincipal extends javax.swing.JFrame {
 		else if (jcb_TasaRetorno.getSelectedItem().equals("mayor a 50"))
 			tasaRetorno = 60;
 
-		resultados = Controller.getInstance().ejecutarClips(
+		grupoResultados = Controller.getInstance().ejecutarClips(
 			Riesgo.values()[jcb_Riesgo.getSelectedIndex() - 1],
 			jcb_Duracion.getSelectedIndex() > 0 ? Duracion.values()[jcb_Duracion.getSelectedIndex() - 1] : null,
 			tasaRetorno,
 			Float.valueOf(jtf_Monto.getText())
 		);
 
-		if (resultados != null) {
-			for(int i=0; i < resultados.size(); i++) {
-				Resultado resultado = resultados.get(i);
-				jta_Resultados.append(i+1 + ". invierta $ " + resultado.getMonto() + 
-					" en " + resultado.getNombre() + "\n");
+		if (grupoResultados != null) {
+			for(int i=0; i < grupoResultados.size(); i++) {
+				GrupoResultados grupo = grupoResultados.get(i);
+				jta_Resultados.append("La regla: " + grupo.getIdRegla() + " con " + grupo.getDescripcionRegla() + "\n");
+				jta_Resultados.append("Recomienda que el cliente: \n");
+				for(int i2=0; i2 < grupo.getResultados().size(); i2++){
+
+				    Resultado resultado = grupo.getResultados().get(i2);
+                    jta_Resultados.append(i2+1 + ". invierta $ " + resultado.getMonto() +
+                            " en " + resultado.getNombre() + "\n");
+                }
+                jta_Resultados.append("\n\n\n");
 			}
 		}
 	}
@@ -268,7 +276,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 					{
 						jl_Duracion = new JLabel();
 						jPanel1.add(jl_Duracion);
-						jl_Duracion.setText("Duración / Inmovilización del Capital :");
+						jl_Duracion.setText("Duraciï¿½n / Inmovilizaciï¿½n del Capital :");
 						jl_Duracion.setBounds(21, 28, 210, 28);
 						jl_Duracion.setOpaque(false);
 						jl_Duracion.setFont(new java.awt.Font("Segoe UI",1,12));
@@ -278,7 +286,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 					}
 					{
 						ComboBoxModel jcb_DuracionModel = new DefaultComboBoxModel(
-							new String[] { "<seleccione periodo>", "Dia", "Semana", "Mes", "Año" });
+							new String[] { "<seleccione periodo>", "Dia", "Semana", "Mes", "Aï¿½o" });
 						jcb_Duracion = new JComboBox();
 						jPanel1.add(jcb_Duracion);
 						jcb_Duracion.setModel(jcb_DuracionModel);
