@@ -106,6 +106,8 @@ public class Controller {
 				try {
 					// ResultadoFinal era el hecho, aca obtengo el slot "resultado"
 					// u otro slot que quiera
+					System.out.println(fv.getFactIndex());
+
 					if (fv.getFactSlot("inversionSugerida") != null) {
                         nombreInversion = fv.getFactSlot("inversionSugerida").toString();
                         if (fv.getFactSlot("identificacion") != null) {
@@ -142,13 +144,8 @@ public class Controller {
 	private List<GrupoResultados> obtenerGruposPorReglas(List<Resultado> resultadosInversiones){
 
         String evalStr = "(find-all-facts((?J Regla_Ejecutada)) TRUE)";
-        // Aca nos devuelve un campo que esta definido en el paquete de clips.
-        // Si yo que tengo un solo hecho de resultado como esto lo que devuelve es como un array en
-        // este caso me quedo con el primero, es decir con el unico
 
         MultifieldValue pv = (MultifieldValue) clips.eval(evalStr);
-
-//			FactAddressValue fv = null;
 
         if (pv != null) {
             FactAddressValue fv = null;
@@ -189,7 +186,6 @@ public class Controller {
         return null;
     }
 
-    //TODO Cambiar esto a %
 	private void ubicarMontos(List<Resultado> resultados, Float montoIngresado) {
 		Float montoInvertir;
 
@@ -211,18 +207,6 @@ public class Controller {
 
             return resultadosGrupo;
     }
-
-
-
-	private Boolean esRepetida(List<Resultado> resultados, String nombreInversion) {
-		if (resultados != null && resultados.size() > 0) {
-			for (Resultado aux : resultados) {
-				if (aux.getNombre().equalsIgnoreCase(nombreInversion))
-					return true;
-			}
-		}
-		return false;
-	}
 
 	private Float redondearResultado(Float montoAInvertir){
 

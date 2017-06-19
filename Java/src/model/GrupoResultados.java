@@ -7,43 +7,41 @@ import java.util.List;
  */
 public class GrupoResultados {
 
-    String idRegla;
-    List<Resultado> resultados;
-    String descripcionRegla;
+	String idRegla;
+	String descripcionRegla;
+	List<Resultado> resultados;
 
-    public String getIdRegla() {
-        return idRegla;
-    }
+	public String getIdRegla() {
+		return idRegla;
+	}
 
-    public GrupoResultados setIdRegla(String idRegla) {
-        this.idRegla = idRegla;
-        return this;
-    }
+	public GrupoResultados setIdRegla(String idRegla) {
+		this.idRegla = idRegla;
+		return this;
+	}
 
-    public List<Resultado> getResultados() {
-        return resultados;
-    }
+	public String getDescripcionRegla() {
+		return descripcionRegla;
+	}
 
-    public GrupoResultados setResultados(List<Resultado> resultados) {
-        this.resultados = resultados;
-        return this;
-    }
+	public GrupoResultados setDescripcionRegla(String descripcionRegla) {
+		this.descripcionRegla = descripcionRegla;
+		return this;
+	}
 
-    public String getDescripcionRegla() {
-        return descripcionRegla;
-    }
+	public List<Resultado> getResultados() {
+		return resultados;
+	}
 
-    public GrupoResultados setDescripcionRegla(String descripcionRegla) {
-        this.descripcionRegla = descripcionRegla;
-        return this;
-    }
+	public GrupoResultados setResultados(List<Resultado> resultados) {
+		this.resultados = resultados;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        return "GrupoResultados{" +
-                "idRegla='" + idRegla + '\'' +
-                ", resultados=" + resultados +
-                ", descripcionRegla='" + descripcionRegla + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "GrupoResultados{" + "idRegla='" + idRegla + '\''
+				+ ", resultados=" + resultados + ", descripcionRegla='"
+				+ descripcionRegla + '\'' + '}';
+	}
 }

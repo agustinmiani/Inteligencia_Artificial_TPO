@@ -8,17 +8,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.List;
 
-import javax.swing.JLabel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -31,9 +31,7 @@ import model.Duracion;
 import model.GrupoResultados;
 import model.Resultado;
 import model.Riesgo;
-
 import controller.Controller;
-
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo
@@ -101,7 +99,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 		jMenu6.addMouseListener(new MouseListener() {
 			public void mousePressed(MouseEvent arg0) {
 				// Cierra el Sistema
-				int seguro = JOptionPane.showConfirmDialog(null, "ï¿½Estï¿½ seguro que desea salir?", "Atenciï¿½n!", JOptionPane.YES_NO_OPTION);
+				int seguro = JOptionPane.showConfirmDialog(null, "¿Está seguro que desea salir?", "Atención!", JOptionPane.YES_NO_OPTION);
 
 				if (seguro == JOptionPane.YES_OPTION)
 					System.exit(0);				
@@ -161,6 +159,8 @@ public class MenuPrincipal extends javax.swing.JFrame {
 
 		jtf_Monto.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent evt) {
+				if (jtf_Monto.getText().isEmpty())
+					jtf_Monto.setText("0");
 				habilitarEjecucion();
 			}
 			public void keyTyped(KeyEvent evt) {
@@ -245,15 +245,15 @@ public class MenuPrincipal extends javax.swing.JFrame {
 		if (grupoResultados != null) {
 			for(int i=0; i < grupoResultados.size(); i++) {
 				GrupoResultados grupo = grupoResultados.get(i);
-				jta_Resultados.append("La regla: " + grupo.getIdRegla() + " con " + grupo.getDescripcionRegla() + "\n");
-				jta_Resultados.append("Recomienda que el cliente: \n");
-				for(int i2=0; i2 < grupo.getResultados().size(); i2++){
+				jta_Resultados.append("Sugerencia de inversión con las condiciones:\n");
+				jta_Resultados.append(grupo.getDescripcionRegla() + "\n\n");
 
-				    Resultado resultado = grupo.getResultados().get(i2);
-                    jta_Resultados.append(i2+1 + ". invierta $ " + resultado.getMonto() +
+				for(int j=0; j < grupo.getResultados().size(); j++) {
+				    Resultado resultado = grupo.getResultados().get(j);
+                    jta_Resultados.append(j+1 + ". Invierta $ " + resultado.getMonto() +
                             " en " + resultado.getNombre() + "\n");
                 }
-                jta_Resultados.append("\n\n\n");
+                jta_Resultados.append("\n\n");
 			}
 		}
 	}
@@ -262,21 +262,21 @@ public class MenuPrincipal extends javax.swing.JFrame {
 		try {
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-			this.setSize(597, 522);
+			this.setSize(629, 522);
 			this.setTitle("Sistema Experto - Recomendacion de Inversiones");
 
 			getContentPane().setLayout(null);
-			this.setPreferredSize(new java.awt.Dimension(597, 522));
+			this.setPreferredSize(new java.awt.Dimension(629, 522));
 			{
 				{
 					jPanel1 = new JPanel();
 					getContentPane().add(jPanel1);
-					jPanel1.setBounds(7, 5, 560, 434);
+					jPanel1.setBounds(5, 5, 603, 449);
 					jPanel1.setLayout(null);
 					{
 						jl_Duracion = new JLabel();
 						jPanel1.add(jl_Duracion);
-						jl_Duracion.setText("Duraciï¿½n / Inmovilizaciï¿½n del Capital :");
+						jl_Duracion.setText("Duración / Inmovilización del Capital :");
 						jl_Duracion.setBounds(21, 28, 210, 28);
 						jl_Duracion.setOpaque(false);
 						jl_Duracion.setFont(new java.awt.Font("Segoe UI",1,12));
@@ -286,7 +286,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 					}
 					{
 						ComboBoxModel jcb_DuracionModel = new DefaultComboBoxModel(
-							new String[] { "<seleccione periodo>", "Dia", "Semana", "Mes", "Aï¿½o" });
+							new String[] { "<seleccione periodo>", "Dia", "Semana", "Mes", "Año" });
 						jcb_Duracion = new JComboBox();
 						jPanel1.add(jcb_Duracion);
 						jcb_Duracion.setModel(jcb_DuracionModel);
@@ -351,15 +351,7 @@ public class MenuPrincipal extends javax.swing.JFrame {
 					{
 						jSeparator1 = new JSeparator();
 						jPanel1.add(jSeparator1);
-						jSeparator1.setBounds(14, 239, 532, 21);
-					}
-					{
-						jta_Resultados = new JTextArea();
-						jPanel1.add(jta_Resultados);
-						jta_Resultados.setBounds(14, 243, 532, 175);
-						jta_Resultados.setBackground(new java.awt.Color(240,255,240));
-						jta_Resultados.setEditable(false);
-						jta_Resultados.setFont(new java.awt.Font("Consolas",1,14));
+						jSeparator1.setBounds(14, 239, 579, 19);
 					}
 					{
 						jbtn_Ejecutar = new JButton();
@@ -367,6 +359,19 @@ public class MenuPrincipal extends javax.swing.JFrame {
 						jbtn_Ejecutar.setText("Ejecutar");
 						jbtn_Ejecutar.setBounds(294, 187, 98, 35);
 						jbtn_Ejecutar.setSize(98, 30);
+					}
+					{
+						jta_Resultados = new JTextArea();
+						jPanel1.add(jta_Resultados);
+						jta_Resultados.setBounds(14, 243, 579, 175);
+						jta_Resultados.setBackground(new java.awt.Color(240,255,240));
+						jta_Resultados.setEditable(false);
+						jta_Resultados.setFont(new java.awt.Font("Consolas",1,14));
+
+						JScrollPane sp = new JScrollPane(); // JTextArea is placed in a JScrollPane.
+						sp.setBounds(14, 245, 579, 194);
+						sp.setViewportView(jta_Resultados);
+						jPanel1.add(sp);
 					}
 				}
 
